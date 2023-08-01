@@ -113,46 +113,52 @@ t.test(lm$price, lw$price)
 
 # Perform ANOVA
 # Combine large apartments data from all regions
-large_region<-filter(sqrt_region, size == "Large")
+large_region<-filter(result, size == "Large")
 
 large_region <- rbind(west_large, midwest_large, northeast_large, southeast_large, southwest_large )
+large_region1<-filter(sqrt_region, size == "Large")
 
-anova_result <- aov(price ~ region, data = large_region)
-      
+
+anova_result <- aov(price ~ region, data = large_region1)
+anova_result
+     
 p_value <- summary(anova_result)[[1]]$"Pr(>F)"[1]
 print(p_value)
 
 
 
-
-
-
-
-
-
-# Filter large apartments for Midwest and Northeast regions
-large_midwest <- filter(sqrt_region, region == "Midwest" & size == "Large")
-large_northeast <- filter(sqrt_region, region == "Northeast" & size == "Large")
-
-View(large_west)
-lm<-head(large_midwest)
-ne<- head(large_northeast)
-
-t.test(lm$price,ne$price)
-
-
 # Avg cost
-lg_mid <- filter(sqrt_region, region=="Midwest")
-lg_west <- filter(sqrt_region, region=="West")
+lg_mid <- filter(result, region=="Midwest")
+lg_west <- filter(result, region=="West")
                     
-lg_west_mid <- rbind(lg_mid, lg_west)                         
-
-# Create the scatter plot
-ggplot(lg_west_mid, aes(x = size, y = price, fill = region)) +
-  geom_bar(stat = "Identity", position = "dodge") +
-  ggtitle("pricing of Large Apartments in West & Midwest")
+lg_west_mid <- rbind(lg_mid$average_cost, lg_west$average_cost)                         
 
 
+
+# BarPlot Large, Medium, Small
+large_region<-filter(result, size == "Large")
+ggplot(large_region, aes(x = region, y = average_cost, fill = region)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Average Apartment Cost by Region and Size (Large Apt)",
+       x = "Region",
+       y = "Average Cost") +
+  theme_minimal()
+``
+small_region<-filter(result, size == "Small")
+ggplot(small_region, aes(x = region, y = average_cost, fill = region)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Average Apartment Cost by Region and Size (Small Apt)",
+       x = "Region",
+       y = "Average Cost") +
+  theme_minimal()
+
+medium_region<-filter(result, size == "Medium")
+ggplot(small_region, aes(x = region, y = average_cost, fill = region)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Average Apartment Cost by Region and Size (Medium Apt)",
+       x = "Region",
+       y = "Average Cost") +
+  theme_minimal()
 
 
 #How does region affect the rent of similar size apartments
